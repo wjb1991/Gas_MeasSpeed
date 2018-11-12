@@ -1,0 +1,6 @@
+Logging started @ 2018-11-07 01:09
+DLL Compiled: Jun 12 2018 14:46:40
+
+  ***** Error: Cannot connect to J-Link via USB.  returns "Cannot connect to J-Link via USB." (2418ms, 2420ms total)
+
+Closed
