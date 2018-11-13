@@ -1,6 +1,8 @@
 #include "mod_measspeed.h"
 
 /*
+    被遮挡->高电平->上升沿       不遮挡->低电平->下降沿
+    
     s1 -> 传感器1被遮挡   传感器2未遮挡     ->检测到来车
     s2 -> 传感器1被遮挡   传感器2被遮挡     ->计算出车速     两传感器安装距离 / 传感器1与传感器2间隔时间
     s3 -> 传感器1未遮挡   传感器2被遮挡     ->计算出车长     传感器1与传感器1间隔时间 * 车速
@@ -95,6 +97,47 @@ void Mod_SenseEnableFalling(MOD_MEASSENSN_TYPE* pst_Sense)
 
 void Mod_SenseEventHandle(MOD_MEASSENSN_TYPE* pst_Sense,BSP_GPIOEVENT_TYPE* pst_GpioEvent)
 {   
+#if 1
+    /* 判断是否是使用的引脚 */
+    if((pst_Sense->uin_UsePinMask & pst_GpioEvent->uin_GpioPin) != 0)
+    {
+        if(pst_Sense->b_Status == TRUE)
+        {
+            if(HAL_GPIO_ReadPin(pst_GpioEvent->vp_GpioPort,pst_GpioEvent->uin_GpioPin) == 0)    //读取电平消抖
+            {
+                if(pst_GpioEvent->b_IsRising == FALSE)      //检测下降沿
+                {
+                    if(++pst_Sense->ul_Count >= pst_Sense->ul_FallThreshold)
+                    {
+                        pst_Sense->b_Status = FALSE;
+                        pst_Sense->ul_Count = 0;
+                        Mod_SaveTsAtoTsB(pst_GpioEvent->st_Ts,
+                                         &pst_Sense->st_FallTs);
+                        Mod_SenseEnableRising(pst_Sense);  //切换到检测上升沿
+
+                    }   
+                }
+            }
+        }
+        else
+        {
+            if(HAL_GPIO_ReadPin(pst_GpioEvent->vp_GpioPort,pst_GpioEvent->uin_GpioPin) == 1)    //读取电平消抖
+            {
+                if(pst_GpioEvent->b_IsRising == TRUE)       //检测上升沿
+                {
+                    if(++pst_Sense->ul_Count >= pst_Sense->ul_RisingThreshold)
+                    {
+                        pst_Sense->b_Status = TRUE;
+                        pst_Sense->ul_Count = 0;
+                        Mod_SaveTsAtoTsB(pst_GpioEvent->st_Ts,
+                                         &pst_Sense->st_RisingTs);
+                        Mod_SenseEnableFalling(pst_Sense);  //切换到检测下降沿
+                    }
+                }
+            }
+        }
+    } 
+#else
     /* 判断是否是使用的引脚 */
     if((pst_Sense->uin_UsePinMask & pst_GpioEvent->uin_GpioPin) != 0)
     {
@@ -144,20 +187,21 @@ void Mod_SenseEventHandle(MOD_MEASSENSN_TYPE* pst_Sense,BSP_GPIOEVENT_TYPE* pst_
             }
         }
     }
+#endif
 }
 
 void Mod_SenseSetLow(MOD_MEASSENSN_TYPE* pst_Sense)
 {
     pst_Sense->b_Status = FALSE;
-    pst_Sense->uin_PinStatus = 0x0000;
     pst_Sense->ul_Count = 0;
+    Mod_SenseEnableRising(pst_Sense);  //切换到检测上升沿
 }
 
 void Mod_SenseSetHigh(MOD_MEASSENSN_TYPE* pst_Sense)
 {
-    pst_Sense->b_Status = FALSE;
-    pst_Sense->uin_PinStatus = 0xffff;
+    pst_Sense->b_Status = TRUE;
     pst_Sense->ul_Count = 0;
+    Mod_SenseEnableFalling(pst_Sense);  //切换到检测下降沿
 }
 
 void Mod_MeasSpeedInit(MOD_MEASSPEED_TYPE *pst_Mod)
@@ -179,7 +223,7 @@ void Mod_MeasSpeedCal(MOD_MEASSPEED_TYPE *pst_Mod)
     ul_IntervalUs = Bsp_GetInterval(&pst_Mod->st_Ts3,&pst_Mod->st_Ts4);
     f_mps2 = pst_Mod->ul_Lenth * 1000.0 / ul_IntervalUs;
     
-    pst_Mod->ul_Acc_mps2 = f_mps1 - f_mps2 * 1000000 / ul_IntervalUs;
+    pst_Mod->ul_Acc_mps2 = (f_mps2 - f_mps1) * 1000000 / ul_IntervalUs;
     
     
     pst_Mod->ul_SpeedAvg_mph = (f_mps2 + f_mps1) * 3600/2;
@@ -203,17 +247,16 @@ void Mod_MeasSpeedCal(MOD_MEASSPEED_TYPE *pst_Mod)
     S_TRACE_DBG(">>MeasSpeed:    测速完成\r\n");
     S_TRACE_DBG(">>MeasSpeed:    车辆方向%u\r\n",pst_Mod->e_Dirction);
     S_TRACE_DBG(">>MeasSpeed:    车辆速度%u(m/h)\r\n",pst_Mod->ul_SpeedAvg_mph);
-    S_TRACE_DBG(">>MeasSpeed:    车辆加速度%u(m/s^2)\r\n",pst_Mod->ul_SpeedAvg_mph);
+    S_TRACE_DBG(">>MeasSpeed:    车辆加速度%f(m/s^2)\r\n",pst_Mod->ul_Acc_mps2);
 }
 
 void Mod_MeasSpeedPoll(MOD_MEASSPEED_TYPE *pst_Mod,BSP_GPIOEVENT_TYPE* pst_GpioEvent)
-{
+{        
+    Mod_SenseEventHandle(pst_Mod->pst_Sense1,pst_GpioEvent);
+    Mod_SenseEventHandle(pst_Mod->pst_Sense2,pst_GpioEvent);
     switch (pst_Mod->e_State)
     {
-    case e_Idle:        //等待第一个上升沿 
-        Mod_SenseEventHandle(pst_Mod->pst_Sense1,pst_GpioEvent);
-        Mod_SenseEventHandle(pst_Mod->pst_Sense2,pst_GpioEvent);
-        
+    case e_Idle:        //等待第一个上升沿  
         if(pst_Mod->pst_Sense1->b_Status == TRUE && pst_Mod->pst_Sense2->b_Status == TRUE)
         {
             //两边都有信号
@@ -243,27 +286,16 @@ void Mod_MeasSpeedPoll(MOD_MEASSPEED_TYPE *pst_Mod,BSP_GPIOEVENT_TYPE* pst_GpioE
         }
         break;
     case e_MeasSpeed:       //等待第二个上升沿
-        Mod_SenseEventHandle(pst_Mod->pst_Sense2,pst_GpioEvent);
-        Mod_SenseSetHigh(pst_Mod->pst_Sense1);      //重置为高电平状态等待下升沿
         if(pst_Mod->pst_Sense2->b_Status == TRUE)
         {
             Mod_SaveTsAtoTsB(&pst_Mod->pst_Sense2->st_RisingTs,
-                             &pst_Mod->st_Ts2);
-            
+                             &pst_Mod->st_Ts2); 
             pst_Mod->e_State = e_MeasLenth;
-            Mod_SenseEnableFalling(pst_Mod->pst_Sense1);
-            Mod_SenseEnableFalling(pst_Mod->pst_Sense2);
-            Mod_SenseSetHigh(pst_Mod->pst_Sense1);      //重置为高电平状态等待下升沿
-            Mod_SenseSetHigh(pst_Mod->pst_Sense2);      //重置为高电平状态等待下升沿
-            
             S_TRACE_DBG(">>MeasSpeed:   第二次上升沿 传感器%u触发\r\n",pst_Mod->pst_Sense2->uin_Id);
         }
-
         break;
     case e_MeasLenth:       //等待第一个下升沿
-        Mod_SenseEventHandle(pst_Mod->pst_Sense1,pst_GpioEvent);
-        Mod_SenseSetHigh(pst_Mod->pst_Sense2);      //重置为高电平状态等待下升沿
-        if(pst_Mod->pst_Sense1->b_Status == TRUE)
+        if(pst_Mod->pst_Sense1->b_Status == FALSE)
         {
             Mod_SaveTsAtoTsB(&pst_Mod->pst_Sense1->st_FallTs,
                              &pst_Mod->st_Ts3);
@@ -272,19 +304,13 @@ void Mod_MeasSpeedPoll(MOD_MEASSPEED_TYPE *pst_Mod,BSP_GPIOEVENT_TYPE* pst_GpioE
         }
         break;
     case e_Leave:           //
-        Mod_SenseEventHandle(pst_Mod->pst_Sense2,pst_GpioEvent);
-        Mod_SenseSetLow(pst_Mod->pst_Sense1);       //重置为低电平状态等待上升沿
-        if(pst_Mod->pst_Sense2->b_Status == TRUE)
+        if(pst_Mod->pst_Sense2->b_Status == FALSE)
         {
             Mod_SaveTsAtoTsB(&pst_Mod->pst_Sense2->st_FallTs,
                              &pst_Mod->st_Ts4);
 
             pst_Mod->e_State = e_Idle;
-            Mod_SenseEnableRising(pst_Mod->pst_Sense1);
-            Mod_SenseEnableRising(pst_Mod->pst_Sense2);
-            Mod_SenseSetLow(pst_Mod->pst_Sense1);    //重置为低电平状态等待上升沿
-            Mod_SenseSetLow(pst_Mod->pst_Sense2);    //重置为低电平状态等待上升沿
-            S_TRACE_DBG(">>MeasSpeed:   第二次下升沿 传感器%u触发\r\n",pst_Mod->pst_Sense1->uin_Id);
+            S_TRACE_DBG(">>MeasSpeed:   第二次下升沿 传感器%u触发\r\n",pst_Mod->pst_Sense2->uin_Id);
 
             Mod_MeasSpeedCal(pst_Mod);
 

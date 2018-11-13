@@ -852,15 +852,15 @@ void Bsp_UartPrintf(const char * Format,...)
 {
 
 #if 1  
-    static INT8U    auch_PrintfBuff[10][100] = {0};
+    static INT8U    auch_PrintfBuff[20][100] = {0};
     static INT8U    uch_Index = 0;
     static int      len = 0;
     Dev_SerialPort* p = &COM1;
     OS_ERR err;
     OSSchedLock(&err);
     
-    if( ++uch_Index >= 25 )
-    uch_Index = 0;
+    if( ++uch_Index >= 20 )
+        uch_Index = 0;
 
     va_list pArgs;
     va_start(pArgs,Format);

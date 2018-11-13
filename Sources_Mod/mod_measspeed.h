@@ -44,7 +44,7 @@ typedef struct{
     INT32U  ul_Speed1_mph;      //相当于 km/h放大1000倍 保留3个小数点
     INT32U  ul_Speed2_mph;
     INT32U  ul_SpeedAvg_mph;
-    INT32U  ul_Acc_mps2;
+    FP32  ul_Acc_mps2;
     
     void(*cb_MeasSpeedEvent)(void *pst_Mod);
 }MOD_MEASSPEED_TYPE;

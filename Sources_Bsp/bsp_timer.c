@@ -67,6 +67,9 @@ void Bsp_GetTimeSample(BSP_TIMESAMPLE_TYPE* pst_Ts)
     INT32U ul_Tick0 = 0;
     INT32U ul_Tick1 = 0;
     
+    pst_Ts->ul_CntReload = SysTick->LOAD;
+    pst_Ts->ul_TickReload = 0xFFFFFFFF;
+    
     ul_Tick0 = HAL_GetTick();   //获取SysTick的中断计数 关了中断这个数不会改变      1
     ul_Cnt0 = SysTick->VAL;     //先获取一次计数值                                  2      
     Bsp_IntDis();               //                                                  3
@@ -99,9 +102,27 @@ INT32U Bsp_GetInterval(BSP_TIMESAMPLE_TYPE* pst_TsOld,BSP_TIMESAMPLE_TYPE * pst_
 {    
     //2^32 = 4294967296Us = 4294967.296Ms =  4294.967296S
     INT32U  ul_Freq = HAL_RCC_GetSysClockFreq() / 1000000;
-    INT32U  ul_IntervalUs = (pst_TsNew->ul_Cnt - pst_TsOld->ul_Cnt) / ul_Freq;
+    INT32U  ul_IntervalUs = 0;
     INT32U  ul_IntervalMs = pst_TsNew->ul_Tick - pst_TsOld->ul_Tick;
 
+    if( pst_TsNew->ul_Cnt < pst_TsOld->ul_Cnt )
+    {
+        ul_IntervalUs = (pst_TsNew->ul_Cnt + pst_TsOld->ul_CntReload - pst_TsOld->ul_Cnt) / ul_Freq;
+    }
+    else
+    {
+        ul_IntervalUs = (pst_TsNew->ul_Cnt - pst_TsOld->ul_Cnt) / ul_Freq;
+    }
+    
+    if( pst_TsNew->ul_Tick < pst_TsOld->ul_Tick )
+    {
+        ul_IntervalMs = pst_TsNew->ul_Tick + (pst_TsOld->ul_TickReload - pst_TsOld->ul_Tick);
+    }
+    else    
+    {
+        ul_IntervalMs = pst_TsNew->ul_Tick - pst_TsOld->ul_Tick;
+    }
+    
     if(ul_IntervalMs >= 4294965) //7.296 - 5  = 2.296Ms余量
     {
         return 4294965000ul;//4294965 * 1000

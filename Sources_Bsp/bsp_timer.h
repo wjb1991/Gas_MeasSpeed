@@ -6,6 +6,8 @@
 typedef struct Bsp_TimeSample_Type  {
     INT32U ul_Cnt; 
     INT32U ul_Tick;
+    INT32U ul_CntReload;
+    INT32U ul_TickReload;
 }BSP_TIMESAMPLE_TYPE;
 
 void Bsp_DelayUs(INT32U us);
