@@ -12,7 +12,7 @@
 #define  BSP_SYNC2_GPIO_PORT                    GPIOC
 #define  BSP_SYNC2_GPIO_CLK_ENABLE()            __HAL_RCC_GPIOC_CLK_ENABLE() 
 
-#define  BSP_LED1_GPIO_PIN                      GPIO_PIN_6
+#define  BSP_LED1_GPIO_PIN                      GPIO_PIN_8
 #define  BSP_LED1_GPIO_PORT                     GPIOC
 #define  BSP_LED1_GPIO_CLK_ENABLE()             __HAL_RCC_GPIOC_CLK_ENABLE() 
 
@@ -143,14 +143,30 @@ void Bsp_Rs485de(Rs485de_t status)
     HAL_GPIO_WritePin(BSP_RS485DE_GPIO_PORT,BSP_RS485DE_GPIO_PIN,(GPIO_PinState)status);
 }
 
+static Laser_t b_Laser1Status = e_LaserOff;
+static Laser_t b_Laser2Status = e_LaserOff;
+
+
 void Bsp_Laser1(Laser_t status)
 {
+    b_Laser1Status = status;
     HAL_GPIO_WritePin(BSP_LASER1_GPIO_PORT,BSP_LASER1_GPIO_PIN,(GPIO_PinState)status);
 }
 
 void Bsp_Laser2(Laser_t status)
 {
+    b_Laser2Status = status;
     HAL_GPIO_WritePin(BSP_LASER2_GPIO_PORT,BSP_LASER2_GPIO_PIN,(GPIO_PinState)status);
+}
+
+Laser_t Bsp_GetLaser1(void)
+{
+    return b_Laser1Status;
+}
+
+Laser_t Bsp_GetLaser2(void)
+{
+    return b_Laser2Status;
 }
 
 void Bsp_Led1(Led_t status)
@@ -163,12 +179,12 @@ void Bsp_Led2(Led_t status)
     HAL_GPIO_WritePin(BSP_LED2_GPIO_PORT,BSP_LED2_GPIO_PIN,(GPIO_PinState)status);
 }
 
-void Bsp_Sync1(Led_t status)
+void Bsp_Sync1(BOOL status)
 {
     HAL_GPIO_WritePin(BSP_SYNC1_GPIO_PORT,BSP_SYNC1_GPIO_PIN,(GPIO_PinState)status);
 }
 
-void Bsp_Sync2(Led_t status)
+void Bsp_Sync2(BOOL status)
 {
     HAL_GPIO_WritePin(BSP_SYNC2_GPIO_PORT,BSP_SYNC2_GPIO_PIN,(GPIO_PinState)status);
 }

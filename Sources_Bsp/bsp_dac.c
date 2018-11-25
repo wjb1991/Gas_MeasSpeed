@@ -43,6 +43,7 @@ void Bsp_DacInit(BSP_DAC_TYPE* pst_Dev)
 void Bsp_DacSetVolt(BSP_DAC_TYPE* pst_Dev,FP32 f_Volt)
 {
     INT16U i =  (INT16U)(f_Volt * pst_Dev->uin_Resolution / pst_Dev->f_RefVolt);
+    pst_Dev->f_DacVolt = f_Volt;
     HAL_DAC_SetValue(pst_Dev->pv_DacHandle,pst_Dev->ul_Channel,pst_Dev->ul_Alignment,i);
 }
 

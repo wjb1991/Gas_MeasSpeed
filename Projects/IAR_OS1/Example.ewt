@@ -2393,6 +2393,9 @@
             <name>$PROJ_DIR$\..\..\Sources_Bsp\bsp.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\..\Sources_Bsp\bsp_adc.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\Sources_Bsp\bsp_clock.c</name>
         </file>
         <file>
@@ -2463,6 +2466,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_usart.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_ll_adc.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_ll_usart.c</name>

@@ -88,25 +88,20 @@ void Task_Start (void *p_arg)
         
         b_Led = ~b_Led;
         Bsp_RunLed(b_Led);
-        Bsp_Laser1(TRUE);
-        Bsp_Laser2(TRUE);
-        Bsp_Led1(b_Led);
-        Bsp_Led2(b_Led);
         
-        
-#if 0
         {
-            static BSP_TIMESAMPLE_TYPE   st_Timing[2] = {0};
-            FP32   f_IntervalMs = 0;        
-            Bsp_GetTimeSample(&st_Timing[0]);
-            Bsp_DelayUs(20);
-            Bsp_GetTimeSample(&st_Timing[1]);
+            __IO INT16U i = GPIOD->IDR;
             
-            f_IntervalMs = Bsp_GetInterval(&st_Timing[0],&st_Timing[1]);
-            TRACE_DBG(">>DBG:       间隔时间 = %f\r\n",f_IntervalMs);        
+            if( (i & 0x00ff) != 0x00ff) 
+                Bsp_Led2(e_LedOn);
+            else
+                Bsp_Led2(e_LedOff);
+            
+            if( (i & 0xff00) != 0xff00) 
+                Bsp_Led1(e_LedOn);
+            else
+                Bsp_Led1(e_LedOff);
         }
-#endif
-
     }
 }
 
@@ -172,54 +167,6 @@ void AppTaskCreate (void)
                  (void         *)0u,                                            /* 用户补充存储区 */
                  (OS_OPT        )(OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR | OS_OPT_TASK_SAVE_FP),
                  (OS_ERR       *)&os_err);                                      /* 存放错误值 */
-#if 0 
-    /* 灰度处理 */
-    OSTaskCreate((OS_TCB       *)&TaskGreyProcTCB,                              /* 创建任务控制块 */
-                 (CPU_CHAR     *)"Grey Process",                                /* 任务名称 */
-                 (OS_TASK_PTR   )Task_GreyProc,                                 /* 任务函数 */    
-                 (void         *)0u,                                            /* 任务入参 */
-                 (OS_PRIO       )TASK_GREYPROC_PRIO,                            /* 任务优先级 */
-                 (CPU_STK      *)&TaskGreyProcStk[0u],                          /* 任务堆载地址 */    
-                 (CPU_STK_SIZE  )TASK_GREYPROC_STK_SIZE / 10u,                  /* 任务栈深限制 */        
-                 (CPU_STK_SIZE  )TASK_GREYPROC_STK_SIZE,                        /* 任务堆栈大小 */ 
-                 (OS_MSG_QTY    )10u,                                           /* 内部消息队列的最大消息数目 */
-                 (OS_TICK       )0u,                                            /* 时间片轮询的时间片数 */
-                 (void         *)0u,                                            /* 用户补充存储区 */
-                 (OS_OPT        )(OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR | OS_OPT_TASK_SAVE_FP),
-                 (OS_ERR       *)&os_err);                                      /* 存放错误值 */
-    
-    
-    /* 光谱仪通信 */
-    OSTaskCreate((OS_TCB       *)&TaskUsbHostTCB,                               /* 创建任务控制块 */
-                 (CPU_CHAR     *)"USB HOST",                                    /* 任务名称 */
-                 (OS_TASK_PTR   )Task_UsbHost,                                  /* 任务函数 */    
-                 (void         *)0u,                                            /* 任务入参 */
-                 (OS_PRIO       )TASK_USB_HOST_PRIO,                            /* 任务优先级 */
-                 (CPU_STK      *)&TaskUsbHostStk[0u],                           /* 任务堆载地址 */    
-                 (CPU_STK_SIZE  )TASK_USB_HOST_STK_SIZE / 10u,                  /* 任务栈深限制 */        
-                 (CPU_STK_SIZE  )TASK_USB_HOST_STK_SIZE,                        /* 任务堆栈大小 */ 
-                 (OS_MSG_QTY    )10u,                                           /* 内部消息队列的最大消息数目 */
-                 (OS_TICK       )0u,                                            /* 时间片轮询的时间片数 */
-                 (void         *)0u,                                            /* 用户补充存储区 */
-                 (OS_OPT        )(OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR | OS_OPT_TASK_SAVE_FP),
-                 (OS_ERR       *)&os_err);                                      /* 存放错误值 */ 
-
-
-    /* 命令行调试 */
-    OSTaskCreate((OS_TCB       *)&AppTaskCmlRecvTCB,                           /* 创建任务控制块 */
-                 (CPU_CHAR     *)"App Task CML Recv",                          /* 任务名称 */
-                 (OS_TASK_PTR   )AppTaskCmlRecv,                               /* 任务函数 */    
-                 (void         *)0u,                                            /* 任务入参 */
-                 (OS_PRIO       )APP_CFG_TASK_CML_RECV_PRIO,                   /* 任务优先级 */
-                 (CPU_STK      *)&AppTaskCmlRecvStk[0u],                       /* 任务堆载地址 */    
-                 (CPU_STK_SIZE  )APP_CFG_TASK_CML_RECV_STK_SIZE / 10u,         /* 任务栈深限制 */        
-                 (CPU_STK_SIZE  )APP_CFG_TASK_CML_RECV_STK_SIZE,               /* 任务堆栈大小 */ 
-                 (OS_MSG_QTY    )0u,                                            /* 内部消息队列的最大消息数目 */
-                 (OS_TICK       )0u,                                            /* 时间片轮询的时间片数 */
-                 (void         *)0u,                                            /* 用户补充存储区 */
-                 (OS_OPT        )(OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR | OS_OPT_TASK_SAVE_FP),
-                 (OS_ERR       *)&os_err);                                      /* 存放错误值 */ 
-#endif
 
 }
 

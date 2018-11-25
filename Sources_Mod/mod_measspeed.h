@@ -10,7 +10,7 @@ typedef enum {
 }MOD_MEASSTATE_TYPE;
 
 typedef enum {
-    e_Null, e_Sense1ToSense2,   e_Sense2ToSense1,
+    e_Null, e_Sense1ToSense2 = 0,   e_Sense2ToSense1 = 1,
 }MOD_MEASSDIRCTION_TYPE;
 
 typedef struct{
@@ -31,8 +31,8 @@ typedef struct{
     MOD_MEASSENSN_TYPE*     pst_Sense2;
     MOD_MEASSTATE_TYPE      e_State;
     MOD_MEASSDIRCTION_TYPE  e_Dirction;
-    INT32U  ul_Count;
-    INT32U  ul_Interval;
+
+    INT32U  ul_LeaveDelayMs;
     
     BSP_TIMESAMPLE_TYPE     st_Ts1;
     BSP_TIMESAMPLE_TYPE     st_Ts2;
@@ -40,11 +40,9 @@ typedef struct{
     BSP_TIMESAMPLE_TYPE     st_Ts4;
     
     INT32U  ul_Lenth;
-    INT32U  ul_IntervalTime_us; //两次测速的间隔时间
-    INT32U  ul_Speed1_mph;      //相当于 km/h放大1000倍 保留3个小数点
-    INT32U  ul_Speed2_mph;
-    INT32U  ul_SpeedAvg_mph;
-    FP32  ul_Acc_mps2;
+    INT32U  ul_Count;
+    FP32    ul_Speed_mph;       //米/小时 相当于 千米/小时 放大1000倍
+    FP32    ul_Acc_mps2;        //米/秒^2    
     
     void(*cb_MeasSpeedEvent)(void *pst_Mod);
 }MOD_MEASSPEED_TYPE;
@@ -53,6 +51,8 @@ extern MOD_MEASSENSN_TYPE st_LaserSense1;
 extern MOD_MEASSENSN_TYPE st_LaserSense2;
 extern MOD_MEASSPEED_TYPE st_MeasSpeed;
 
+void Mod_MeasSpeedInit(MOD_MEASSPEED_TYPE *psd_Mod);
 void Mod_MeasSpeedPoll(MOD_MEASSPEED_TYPE *psd_Mod,BSP_GPIOEVENT_TYPE* pst_GpioEvent);
+void Mod_MeasSpeedTimeOut(MOD_MEASSPEED_TYPE *pst_Mod);
 
 #endif

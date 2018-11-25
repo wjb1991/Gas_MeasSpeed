@@ -67,7 +67,7 @@ void ErrHandle(void * pv_dev)
 void StdBus_Init(uint8_t uch_Address)
 {
     Rsc_ComPack(&StdBus_Port0);
-    StdBus_Port0.pv_PortHandle = &COM4;
+    StdBus_Port0.pv_PortHandle = &COM1;
     StdBus_Port0.uch_Address = uch_Address;
     
     ((Dev_SerialPort*)StdBus_Port0.pv_PortHandle)->cb_SendComplete = s_Port0TransComplet;

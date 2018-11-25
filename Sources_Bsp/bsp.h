@@ -28,6 +28,7 @@ extern  "C" {                                  /* See Note #1.                  
 #include  <string.h>
 #include  <math.h>
 #include  <stm32f1xx_hal.h>
+#include  "stm32f1xx_ll_adc.h"
 #include  "stm32f1xx_ll_usart.h"
 #include  "stm32f1xx_ll_spi.h"
 
@@ -41,6 +42,7 @@ extern  "C" {                                  /* See Note #1.                  
 #include  "bsp_usart.h"
 #include  "bsp_spi.h"
 #include  "bsp_dac.h"
+#include  "bsp_adc.h"
   
  
   

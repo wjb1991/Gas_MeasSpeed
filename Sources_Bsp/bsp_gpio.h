@@ -13,7 +13,7 @@ typedef enum {
 } Rs485de_t;
 
 typedef enum {
-    e_LedOn = GPIO_PIN_RESET, e_LedOff =  GPIO_PIN_SET,
+    e_LedOn = GPIO_PIN_SET, e_LedOff =  GPIO_PIN_RESET,
 } Led_t;
 
 typedef enum {
@@ -33,9 +33,14 @@ void  Bsp_GpioInit(void);
 void  Bsp_Rs485de(Rs485de_t status);
 void  Bsp_Laser1(Laser_t status);
 void  Bsp_Laser2(Laser_t status);
+Laser_t Bsp_GetLaser1(void);
+Laser_t Bsp_GetLaser2(void);
+
 void  Bsp_Led1(Led_t status);
 void  Bsp_Led2(Led_t status);
 void  Bsp_RunLed(Led_t status);
+void Bsp_Sync1(BOOL status);
+void Bsp_Sync2(BOOL status);
 
 #ifdef __cplusplus
 }                                             
