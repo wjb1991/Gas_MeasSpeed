@@ -133,15 +133,9 @@ uint8_t Deal_SlavePack(StdBus_t* pst_Fram)
     case 0x80:
         if(pst_Fram->uch_SubCmd == DEF_SUBCMD_WRITE) 
         {   
-            //因为会延时较长时间 就不应答了
-            Bsp_Sync1(FALSE);
-            Bsp_Sync2(FALSE);
-            Bsp_DelayMs(5);
-            Bsp_Sync1(TRUE);
-            Bsp_Sync2(TRUE);
-            Bsp_DelayMs(50);
-            Bsp_Sync1(FALSE);
-            Bsp_Sync2(FALSE);
+            OS_ERR os_err;
+            OSTaskSemPost(&TaskSoftMeasTCB,OS_OPT_POST_NONE,&os_err);
+            res = 1;    //应答   
         }
         else if(pst_Fram->uch_SubCmd == DEF_SUBCMD_READ)
         {

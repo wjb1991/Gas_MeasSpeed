@@ -287,9 +287,11 @@ void Mod_MeasSpeedPoll(MOD_MEASSPEED_TYPE *pst_Mod,BSP_GPIOEVENT_TYPE* pst_GpioE
                              &pst_Mod->st_Ts4);
 
             pst_Mod->e_State = e_Idle;
-            S_TRACE_DBG(">>MeasSpeed:   第二次下升沿 传感器%u触发\r\n",pst_Mod->pst_Sense2->uin_Id);
+
+            Mod_MeasSpeedCal(pst_Mod);  //计算速度加速度
             
-            Mod_MeasSpeedCal(pst_Mod);
+            if( pst_Mod->cb_MeasSpeedEvent != NULL)
+                pst_Mod->cb_MeasSpeedEvent(pst_Mod);  
             
             if(pst_Mod->ul_LeaveDelayMs > 0 )
             {
@@ -299,8 +301,7 @@ void Mod_MeasSpeedPoll(MOD_MEASSPEED_TYPE *pst_Mod,BSP_GPIOEVENT_TYPE* pst_GpioE
                               &os_err);
             }
             
-            if( pst_Mod->cb_MeasSpeedEvent != NULL)
-                pst_Mod->cb_MeasSpeedEvent(pst_Mod);
+            S_TRACE_DBG(">>MeasSpeed:   第二次下升沿 传感器%u触发\r\n",pst_Mod->pst_Sense2->uin_Id);
         }
         break;
     default:

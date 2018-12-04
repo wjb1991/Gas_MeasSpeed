@@ -27,7 +27,7 @@
 void Task_StdBus (void *p_arg)
 {
     //OS_ERR  os_err;
-    StdBus_Init(0x40);
+    StdBus_Init(0x30);
   
     while(1)
     {

@@ -50,4 +50,14 @@ void Bsp_Init (void)
     Bsp_TimeSampleInit();                           //时间戳功能校准
     
     Bsp_ADC1Init();
+    
+    while(0)
+    {
+        Bsp_Sync1(TRUE);
+        Bsp_Sync2(TRUE);  
+        Bsp_DelayMs(1000);
+        Bsp_Sync1(FALSE);
+        Bsp_Sync2(FALSE); 
+        Bsp_DelayMs(1000);
+    }
 }

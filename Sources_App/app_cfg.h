@@ -24,6 +24,8 @@
 
 #define  TASK_STDBUS_PRIO               10u
 
+#define  TASK_SOFTMEAS_PRIO             11u
+
 #define  TASK_CML_RECV_PRIO             20u
 #define  TASK_CML_SEND_PRIO             21u
 
@@ -36,7 +38,7 @@
 #define  TASK_CML_SEND_STK_SIZE         256u
 #define  TASK_CML_RECV_STK_SIZE         256u
 #define  TASK_STDBUS_STK_SIZE           512u
-
+#define  TASK_SOFTMEAS_STK_SIZE         512u
 
 //==================================================================================
 //                                   任务控制块声明
@@ -46,7 +48,7 @@ extern  OS_TCB       TaskMeasSpeedTCB;       /*  测速任务            */
 extern  OS_TCB       TaskCmlSendTCB;         /*  命令行调试任务    */
 extern  OS_TCB       TaskCmlRecvTCB;         /*  命令行调试任务    */
 extern  OS_TCB       TaskStdBusTCB;          /*  STDBUS任务    */
-
+extern  OS_TCB       TaskSoftMeasTCB;          /*  STDBUS任务    */
 //==================================================================================
 //                                   任务堆栈声明
 //==================================================================================
@@ -54,7 +56,7 @@ extern  CPU_STK      TaskStartStk   [TASK_START_STK_SIZE];                  /*  
 extern  CPU_STK      TaskCmlSendStk [TASK_CML_SEND_STK_SIZE];               /*  命令行调试任务    */
 extern  CPU_STK      TaskCmlRecvStk [TASK_CML_RECV_STK_SIZE];               /*  命令行调试任务    */
 extern  CPU_STK      TaskStdBusStk  [TASK_STDBUS_STK_SIZE];                 /*  STDBUS任务    */
-
+extern  CPU_STK      TaskSoftMeasStk  [TASK_SOFTMEAS_STK_SIZE];                 /*  STDBUS任务    */
 
 //==================================================================================
 //                                   任务函数声明
@@ -63,7 +65,7 @@ extern void Task_Start (void  *p_arg);               /*  开始任务    */
 extern void Task_TransCml (void  *p_arg);            /*  命令行调试任务    */
 extern void Task_RecvCml (void  *p_arg);             /*  命令行调试任务    */
 extern void Task_StdBus (void  *p_arg);              /*  STDBUS总线通讯    */
-
+extern void Task_SoftMeas (void  *p_arg);            /*  STDBUS总线通讯    */
 
 //==================================================================================
 //                                   队列声明

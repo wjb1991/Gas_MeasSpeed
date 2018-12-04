@@ -82,7 +82,13 @@ void Send_ComPack(StdBus_t * pst_Fram)
     if(pst_Fram->uch_State == STATE_SEND)
     {
         if( StdBus_Port0.pv_PortHandle == (void *)&COM1)
+        {
+            OS_ERR os_err;
+            OSTimeDlyHMSM(0u, 0u, 0u, 2u,
+                          OS_OPT_TIME_HMSM_STRICT,
+                          &os_err);
             Bsp_Rs485de(eRs485Trans);
+        }
         
         pst_Fram->uin_BuffIndex = 0;
         Bsp_UartSend(pst_Fram->pv_PortHandle,
