@@ -181,15 +181,20 @@ void Mod_MeasSpeedCal(MOD_MEASSPEED_TYPE *pst_Mod)
     /* lenth/ts2-ts1 = speed1 lenth/ts4-ts3 = speed2 */
     /* 1. um/us = m/s  2.m/s * 3600 = m/h */
   
-    INT32U ul_IntervalUs = 0;
+    INT32U ul_IntervalUs1 = 0;
+    INT32U ul_IntervalUs2 = 0;
+    INT32U ul_IntervalUs3 = 0;
     FP64 f_mps1,f_mps2;
-    ul_IntervalUs = Bsp_GetInterval(&pst_Mod->st_Ts1,&pst_Mod->st_Ts2);
-    f_mps1 = pst_Mod->ul_Lenth * 1000.0 / ul_IntervalUs; 
+    ul_IntervalUs1 = Bsp_GetInterval(&pst_Mod->st_Ts1,&pst_Mod->st_Ts2);
+    f_mps1 = pst_Mod->ul_Lenth * 1000.0 / ul_IntervalUs1; 
   
-    ul_IntervalUs = Bsp_GetInterval(&pst_Mod->st_Ts3,&pst_Mod->st_Ts4);
-    f_mps2 = pst_Mod->ul_Lenth * 1000.0 / ul_IntervalUs;
+    ul_IntervalUs2 = Bsp_GetInterval(&pst_Mod->st_Ts3,&pst_Mod->st_Ts4);
+    f_mps2 = pst_Mod->ul_Lenth * 1000.0 / ul_IntervalUs2;
     
-    pst_Mod->ul_Acc_mps2 = (f_mps2 - f_mps1) * 1000000 / ul_IntervalUs;
+    ul_IntervalUs3 = Bsp_GetInterval(&pst_Mod->st_Ts2,&pst_Mod->st_Ts3);
+    ul_IntervalUs3 = ul_IntervalUs3 + (ul_IntervalUs1 + ul_IntervalUs2) / 2;
+    
+    pst_Mod->ul_Acc_mps2 = (f_mps2 - f_mps1) * 1000000 / ul_IntervalUs3;
     
     pst_Mod->ul_Speed_mph = (f_mps2 + f_mps1) * 3600/2;
 

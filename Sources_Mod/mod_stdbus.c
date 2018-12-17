@@ -361,13 +361,21 @@ void Deal_ComPack(StdBus_t * pst_Fram)
     pst_Fram->uin_PayLoadLenth +=  pst_Fram->auc_Buff[i++];
 
     pst_Fram->puc_PayLoad = &pst_Fram->auc_Buff[i];
-
-    //判断是否是最末节点
+    
+    //判断是当前节点是否是主机地址
     if(pst_Fram->puc_AddrList[pst_Fram->uch_Location] != pst_Fram->uch_Address)
+    {
+        Rsc_ComPack(pst_Fram);              //释放本端口的数据
+        return;
+    }
+      
+    //判断是否是最末节点
+    if(pst_Fram->puc_AddrList[pst_Fram->uch_LinkLenth-1] != pst_Fram->uch_Address)
     {
         //转发到其他端口
         //TRACE_DBG(">>DBG:       转发到其他端口\r\n");
         Send_Other(pst_Fram);
+        Rsc_ComPack(pst_Fram);              //释放本端口的数据
         return;
     }
         

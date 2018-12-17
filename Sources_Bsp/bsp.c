@@ -36,7 +36,7 @@ void Bsp_Init (void)
     Bsp_UartOpen(&COM1); 
     
     Bsp_DacInit(&Bsp_Dac1);
-    Bsp_DacSetVolt(&Bsp_Dac1,0.15f); 
+    Bsp_DacSetVolt(&Bsp_Dac1,1.15f); 
     
     /* COM4->ต๗สิดฎฟฺ */
     COM4.ul_BaudRate   = 230400;
