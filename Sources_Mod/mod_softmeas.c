@@ -16,13 +16,19 @@ void Task_SoftMeas(void *p_arg)
                       &os_err);
         
         Bsp_Sync1(TRUE);            
-        OSTimeDlyHMSM(0u, 0u, 1u, 10u,
+        OSTimeDlyHMSM(0u, 0u, 1u, 0u,
                       OS_OPT_TIME_HMSM_STRICT,
                       &os_err);
-        Bsp_Sync1(FALSE); 
-        
-        /* 模拟车辆速度 */
-        OSTimeDlyHMSM(0u, 0u, 1u, 50u,
+        Bsp_Sync2(TRUE);  
+        OSTimeDlyHMSM(0u, 0u, 1u, 0u,
+                      OS_OPT_TIME_HMSM_STRICT,
+                      &os_err);
+        Bsp_Sync1(FALSE);  
+        OSTimeDlyHMSM(0u, 0u, 1u, 0u,
+                      OS_OPT_TIME_HMSM_STRICT,
+                      &os_err);
+        Bsp_Sync2(FALSE);  
+        OSTimeDlyHMSM(0u, 0u, 1u, 0u,
                       OS_OPT_TIME_HMSM_STRICT,
                       &os_err);
         
@@ -32,7 +38,7 @@ void Task_SoftMeas(void *p_arg)
         st_MeasSpeed.ul_Speed_mph = st_MeasSpeed.ul_Count % 10 + 100;
         st_MeasSpeed.ul_Acc_mps2 = st_MeasSpeed.ul_Count % 10;            
         
-        Bsp_Sync2(TRUE);            
+          
         OSTimeDlyHMSM(0u, 0u, 1u, 10u,
                       OS_OPT_TIME_HMSM_STRICT,
                       &os_err);

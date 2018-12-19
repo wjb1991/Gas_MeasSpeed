@@ -11,6 +11,10 @@
         <LimitSize>0</LimitSize>
         <ByteLimit>50</ByteLimit>
     </Stack>
+    <Trace1>
+        <Enabled>0</Enabled>
+        <ShowSource>1</ShowSource>
+    </Trace1>
     <Interrupts>
         <Enabled>1</Enabled>
     </Interrupts>
@@ -35,7 +39,7 @@
         <LeaveTargetRunning>_ 0</LeaveTargetRunning>
     </StLinkDriver>
     <DebugChecksum>
-        <Checksum>3748475806</Checksum>
+        <Checksum>159490777</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -45,8 +49,8 @@
         <Enabled>_ 0</Enabled>
     </CodeCoverage>
     <Disassembly>
-        <InstrCount>0</InstrCount>
         <MixedMode>1</MixedMode>
+        <InstrCount>0</InstrCount>
     </Disassembly>
     <CallStack>
         <ShowArgs>0</ShowArgs>
@@ -54,7 +58,7 @@
     <SWOTraceHWSettings>
         <OverrideDefaultClocks>0</OverrideDefaultClocks>
         <CpuClock>216000000</CpuClock>
-        <ClockAutoDetect>1</ClockAutoDetect>
+        <ClockAutoDetect>0</ClockAutoDetect>
         <ClockWanted>2000000</ClockWanted>
         <JtagSpeed>2000000</JtagSpeed>
         <Prescaler>108</Prescaler>
@@ -90,10 +94,11 @@
         <Title1>0x00000000</Title1>
         <Setup1>0 2 0 0 1 1 0 0 4294967295</Setup1>
     </DataStripe>
-    <JLinkDriver>
-        <CStepIntDis>_ 0</CStepIntDis>
-        <LeaveTargetRunning>_ 0</LeaveTargetRunning>
-    </JLinkDriver>
+    <struct_types>
+        <Fmt0>BSP_GPIOEVENT_TYPE-uin_GpioPin	4	0</Fmt0>
+        <Fmt1>MOD_MEASSENSN_TYPE-uin_PinStatus	4	0</Fmt1>
+        <Fmt2>MOD_MEASSENSN_TYPE-uin_UsePinMask	4	0</Fmt2>
+    </struct_types>
     <array_types>
         <Fmt0>uint16_t[3670]	4	0</Fmt0>
         <Fmt1>uint16_t[3870]	4	0</Fmt1>
@@ -105,24 +110,6 @@
         <Fmt0>{W}1:i	4	0</Fmt0>
         <Fmt1>{W}1:t	4	0</Fmt1>
     </watch_formats>
-    <Trace1>
-        <Enabled>0</Enabled>
-        <ShowSource>1</ShowSource>
-    </Trace1>
-    <PowerLog>
-        <Title_0>I0</Title_0>
-        <Symbol_0>0 4 0</Symbol_0>
-        <LogEnabled>0</LogEnabled>
-        <GraphEnabled>0</GraphEnabled>
-        <ShowTimeLog>1</ShowTimeLog>
-        <LiveEnabled>0</LiveEnabled>
-        <LiveFile>PowerLogLive.log</LiveFile>
-    </PowerLog>
-    <PowerProbe>
-        <Frequency>10000</Frequency>
-        <Probe0>I0</Probe0>
-        <ProbeSetup0>2 1 1 2 0 0</ProbeSetup0>
-    </PowerProbe>
     <Trace2>
         <Enabled>0</Enabled>
         <ShowSource>0</ShowSource>

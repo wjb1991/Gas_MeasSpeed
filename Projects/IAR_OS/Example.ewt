@@ -2381,7 +2381,7 @@
     <group>
         <name>Sources_App</name>
         <file>
-            <name>$PROJ_DIR$\..\..\Sources_App\app_standalone.c</name>
+            <name>$PROJ_DIR$\..\..\Sources_App\app_main.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\Sources_App\app_stdbus.c</name>
@@ -2393,19 +2393,31 @@
             <name>$PROJ_DIR$\..\..\Sources_Bsp\bsp.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\..\Sources_Bsp\bsp_adc.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Sources_Bsp\bsp_clock.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\Sources_Bsp\bsp_converter.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\Sources_Bsp\bsp_dac.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\Sources_Bsp\bsp_display.c</name>
-        </file>
-        <file>
             <name>$PROJ_DIR$\..\..\Sources_Bsp\bsp_gpio.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\..\Sources_Bsp\bsp_os.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Sources_Bsp\bsp_timer.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\Sources_Bsp\bsp_usart.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Sources_Bsp\cpu_bsp.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\Sources_Bsp\stm32f1xx_hal_msp.c</name>
@@ -2420,10 +2432,22 @@
             <name>$PROJ_DIR$\..\..\Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\..\Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_adc.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_adc_ex.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_cortex.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_dac.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_dac_ex.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_dma.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_gpio.c</name>
@@ -2444,6 +2468,9 @@
             <name>$PROJ_DIR$\..\..\Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_usart.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\..\Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_ll_adc.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_ll_usart.c</name>
         </file>
     </group>
@@ -2458,5 +2485,179 @@
         <file>
             <name>$PROJ_DIR$\..\..\Sources_Mod\mod_stdbus.c</name>
         </file>
+    </group>
+    <group>
+        <name>Sources_Task</name>
+        <file>
+            <name>$PROJ_DIR$\..\..\Sources_Mod\mod_softmeas.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Sources_Task\task_cml.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Sources_Task\task_measspeed.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Sources_Task\task_start.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Sources_Task\task_stdbus.c</name>
+        </file>
+    </group>
+    <group>
+        <name>uCOSIII</name>
+        <group>
+            <name>uC-CONFIG</name>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uC-CONFIG\cpu_cfg.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uC-CONFIG\lib_cfg.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uC-CONFIG\os_app_hooks.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uC-CONFIG\os_app_hooks.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uC-CONFIG\os_cfg.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uC-CONFIG\os_cfg_app.h</name>
+            </file>
+        </group>
+        <group>
+            <name>uC-CPU</name>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uC-CPU\ARM-Cortex-M4\IAR\cpu.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uC-CPU\ARM-Cortex-M4\IAR\cpu_a.asm</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uC-CPU\ARM-Cortex-M4\IAR\cpu_c.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uC-CPU\cpu_cache.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uC-CPU\cpu_core.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uC-CPU\cpu_core.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uC-CPU\cpu_def.h</name>
+            </file>
+        </group>
+        <group>
+            <name>uC-LIB</name>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uC-LIB\lib_ascii.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uC-LIB\lib_ascii.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uC-LIB\lib_def.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uC-LIB\lib_math.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uC-LIB\lib_math.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uC-LIB\lib_mem.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uC-LIB\lib_mem.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uC-LIB\Ports\ARM-Cortex-M4\IAR\lib_mem_a.asm</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uC-LIB\lib_str.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uC-LIB\lib_str.h</name>
+            </file>
+        </group>
+        <group>
+            <name>uC-OSIII</name>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uCOS-III\Source\os.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uCOS-III\Source\os_cfg_app.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uCOS-III\Source\os_core.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uCOS-III\Source\os_dbg.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uCOS-III\Source\os_flag.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uCOS-III\Source\os_mem.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uCOS-III\Source\os_mon.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uCOS-III\Source\os_msg.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uCOS-III\Source\os_mutex.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uCOS-III\Source\os_prio.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uCOS-III\Source\os_q.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uCOS-III\Source\os_sem.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uCOS-III\Source\os_stat.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uCOS-III\Source\os_task.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uCOS-III\Source\os_tick.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uCOS-III\Source\os_time.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uCOS-III\Source\os_tmr.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uCOS-III\Source\os_trace.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uCOS-III\Source\os_type.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uCOS-III\Source\os_var.c</name>
+            </file>
+        </group>
+        <group>
+            <name>uC-OSIII/Ports</name>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uCOS-III\Ports\ARM-Cortex-M\ARMv7-M\IAR\os_cpu.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uCOS-III\Ports\ARM-Cortex-M\ARMv7-M\IAR\os_cpu_a.asm</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\uCOSIII\uCOS-III\Ports\ARM-Cortex-M\ARMv7-M\IAR\os_cpu_c.c</name>
+            </file>
+        </group>
     </group>
 </project>

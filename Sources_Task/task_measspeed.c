@@ -2,12 +2,8 @@
 
 void DoorCloseFnct (void *p_tmr,  void *p_arg);
 OS_TMR CloseDoorTmr;
-OS_TMR tmr_Sync1;
-OS_TMR tmr_Sync2;
 
 void Task_MeasEvent(void *pst_Mod);
-void Task_Sync1Success(void *p_tmr,  void *p_arg);
-void Task_Sync2Success(void *p_tmr,  void *p_arg);
 
 //==================================================================================================
 //| 函数名称 | Task_MeasSpeed
@@ -32,25 +28,6 @@ void Task_MeasSpeed (void *p_arg)
                 DoorCloseFnct,          /* p_callback */
                 0,                      /* p_callback_arg */
                 &err);                  /* p_err */
-    
-    OSTmrCreate(&tmr_Sync1,             /* p_tmr */
-                "Sync1 Delay Timer",    /* p_name */
-                1,                      /* dly 1 * 0.01s = 0.01s*/
-                0,                      /* period */
-                OS_OPT_TMR_ONE_SHOT,    /* opt */
-                Task_Sync1Success,          /* p_callback */
-                0,                      /* p_callback_arg */
-                &err);                  /* p_err */
-    
-    OSTmrCreate(&tmr_Sync2,             /* p_tmr */
-                "Sync2 Delay Timer",    /* p_name */
-                1,                      /* dly 1 * 0.01s = 0.01s*/
-                0,                      /* period */
-                OS_OPT_TMR_ONE_SHOT,    /* opt */
-                Task_Sync2Success,          /* p_callback */
-                0,                      /* p_callback_arg */
-                &err);                  /* p_err */
-    
     
     
     Mod_MeasSpeedInit(&st_MeasSpeed);
@@ -84,8 +61,8 @@ void Task_MeasEvent(void *pst_Mod)
         //转入空闲状态 关闭超时   两个传感器都未被遮挡  
         //车子完全离开
         //一次测速完成
-        Bsp_Sync2(TRUE);
-        OSTmrStart(&tmr_Sync1,&err);
+        Bsp_Sync1(FALSE);
+        Bsp_Sync2(FALSE);
         OSTmrStop(&CloseDoorTmr,OS_OPT_TMR_NONE,NULL,&err);
         if(err != OS_ERR_NONE)
         {
@@ -98,7 +75,7 @@ void Task_MeasEvent(void *pst_Mod)
         //车子刚刚进入
         //开启软件定时器
         Bsp_Sync1(TRUE);
-        OSTmrStart(&tmr_Sync1,&err);
+        Bsp_Sync2(FALSE);
         OSTmrStart(&CloseDoorTmr,&err);
         if(err != OS_ERR_NONE)
         {
@@ -108,15 +85,18 @@ void Task_MeasEvent(void *pst_Mod)
     case e_MeasLenth:
         //转入测速2个传感器进入 被遮挡
         //车子完全进入
+        Bsp_Sync1(TRUE);
+        Bsp_Sync2(TRUE);
         break;
     case e_Leave:
         //转入测速1个传感器离开 被遮挡
         //车子刚要离开
+        Bsp_Sync1(FALSE);
+        Bsp_Sync2(TRUE);
         break;
     default:
         break;
     }
-
 }
 
 void DoorCloseFnct (void *p_tmr,  void *p_arg)
@@ -126,14 +106,3 @@ void DoorCloseFnct (void *p_tmr,  void *p_arg)
     Bsp_Sync1(FALSE);
     Bsp_Sync2(FALSE);
 }
-
-void Task_Sync1Success(void *p_tmr,  void *p_arg)
-{
-    Bsp_Sync1(TRUE);
-}
-
-void Task_Sync2Success(void *p_tmr,  void *p_arg)
-{
-    Bsp_Sync2(TRUE);
-}
-
