@@ -51,14 +51,14 @@
 
 #include "usb_host.h"
 #include "usbh_core.h"
-//#include "usbh_audio.h"
-//#include "usbh_cdc.h"
-//#include "usbh_msc.h"
-//#include "usbh_hid.h"
-//#include "usbh_mtp.h"
+#include "usbh_audio.h"
+#include "usbh_cdc.h"
+#include "usbh_msc.h"
+#include "usbh_hid.h"
+#include "usbh_mtp.h"
 
 /* USER CODE BEGIN Includes */
-#include "usbh_template.h"
+#include "usbh_usb4000.h"
 /* USER CODE END Includes */
 
 /* USER CODE BEGIN PV */
@@ -72,7 +72,7 @@
 /* USER CODE END PFP */
 
 /* USB Host core handle declaration */
-USBH_HandleTypeDef hUsbHostFS;
+USBH_HandleTypeDef hUsbHostHS;
 ApplicationTypeDef Appli_state = APPLICATION_IDLE;
 
 /*
@@ -98,42 +98,34 @@ static void USBH_UserProcess(USBH_HandleTypeDef *phost, uint8_t id);
   * Init USB host library, add supported class and start the library
   * @retval None
   */
-void USB_HOST_Init(void)
+void MX_USB_HOST_Init(void)
 {
   /* USER CODE BEGIN USB_HOST_Init_PreTreatment */
   
   /* USER CODE END USB_HOST_Init_PreTreatment */
   
   /* Init host Library, add supported class and start the library. */
-  USBH_Init(&hUsbHostFS, USBH_UserProcess, 0);
+  USBH_Init(&hUsbHostHS, USBH_UserProcess, HOST_HS);
 
-  //USBH_RegisterClass(&hUsbHostFS, USBH_AUDIO_CLASS);
+  //USBH_RegisterClass(&hUsbHostHS, USBH_AUDIO_CLASS);
 
-  //USBH_RegisterClass(&hUsbHostFS, USBH_CDC_CLASS);
+  //USBH_RegisterClass(&hUsbHostHS, USBH_CDC_CLASS);
 
-  //USBH_RegisterClass(&hUsbHostFS, USBH_MSC_CLASS);
+  //USBH_RegisterClass(&hUsbHostHS, USBH_MSC_CLASS);
 
-  //USBH_RegisterClass(&hUsbHostFS, USBH_HID_CLASS);
+  //USBH_RegisterClass(&hUsbHostHS, USBH_HID_CLASS);
 
-  //USBH_RegisterClass(&hUsbHostFS, USBH_MTP_CLASS);
+  //USBH_RegisterClass(&hUsbHostHS, USBH_MTP_CLASS);
   
-  USBH_RegisterClass(&hUsbHostFS, USBH_USB4000_CLASS);
+    USBH_RegisterClass(&hUsbHostHS, USBH_USB4000_CLASS);
 
-  USBH_Start(&hUsbHostFS);
+  USBH_Start(&hUsbHostHS);
 
   /* USER CODE BEGIN USB_HOST_Init_PostTreatment */
   
   /* USER CODE END USB_HOST_Init_PostTreatment */
 }
 
-/*
- * Background task
- */
-void USB_HOST_Process(void)
-{
-  /* USB Host Background task */
-  USBH_Process(&hUsbHostFS);
-}
 /*
  * user callback definition
  */
@@ -155,57 +147,13 @@ static void USBH_UserProcess  (USBH_HandleTypeDef *phost, uint8_t id)
 
   case HOST_USER_CONNECTION:
   Appli_state = APPLICATION_START;
-  HAL_Delay(3000);
+  for(int i=0;i<50000;i++){}
   break;
 
   default:
   break;
   }
   /* USER CODE END CALL_BACK_1 */
-}
-
-/**
-  * @brief  This function handles USB-On-The-Go FS global interrupt request.
-  * @param  None
-  * @retval None
-  */
-void OTG_FS_IRQHandler(void)
-{
-#ifdef  OS_SUPPORT
-    CPU_SR_ALLOC();
-
-    CPU_CRITICAL_ENTER();
-    OSIntEnter();
-    CPU_CRITICAL_EXIT();
-#endif
-    
-    HAL_HCD_IRQHandler(&hhcd);
-    
-#ifdef  OS_SUPPORT
-    OSIntExit();
-#endif
-}
-
-/**
-  * @brief  This function handles USB-On-The-Go FS/HS global interrupt request.
-  * @param  None
-  * @retval None
-  */
-void OTG_HS_IRQHandler(void)
-{
-#ifdef  OS_SUPPORT
-    CPU_SR_ALLOC();
-
-    CPU_CRITICAL_ENTER();
-    OSIntEnter();
-    CPU_CRITICAL_EXIT();
-#endif
-
-    HAL_HCD_IRQHandler(&hhcd);
-    
-#ifdef  OS_SUPPORT
-    OSIntExit();
-#endif
 }
 
 /**

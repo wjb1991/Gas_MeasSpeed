@@ -22,7 +22,7 @@ void Task_MeasSpeed (void *p_arg)
     
     OSTmrCreate(&CloseDoorTmr,          /* p_tmr */
                 "MeasSpeedTimeOut",     /* p_name */
-                300,                    /* dly 300* 0.01s = 3s*/
+                1000,                    /* dly 1000* 0.01s = 3s*/
                 0,                      /* period */
                 OS_OPT_TMR_ONE_SHOT,    /* opt */
                 DoorCloseFnct,          /* p_callback */
